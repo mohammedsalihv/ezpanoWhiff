@@ -1,0 +1,112 @@
+<link rel="stylesheet" href="/css/catogeryEdit.css">
+<div class="admin-nav">
+    <nav class="navbar navbar-expand-lg navbar-light" id="admin-nav">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a id="navlink" class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a id="navlink" class="nav-link" href="#">Notifications<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a id="navlink" class="nav-link" href="#">Alert</a>
+            </ul>
+        </div>
+    </nav>
+</div>
+<section>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <button id="toggle-btn" type="button">
+                    <i class="lni lni-grid-alt"></i>
+                </button>
+
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="/admin/adminDashboard" class="sidebar-link">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/listUsers" class="sidebar-link">
+                        <i class="lni lni-user"></i>
+                        <span>Customers</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/productManagement" class="sidebar-link">
+                        <i class="fa-solid fa-box-open"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/categoryManagement" class="sidebar-link">
+                        <i class="lni lni-agenda"></i>
+                        <span>Categories</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/orderManagement" class="sidebar-link">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/offerManagement" class="sidebar-link">
+                        <i class="lni lni-popup"></i>
+                        <span>Offers</span>
+                    </a>
+                </li>
+                   <li class="sidebar-item">
+                      <a href="/admin/couponManagement" class="sidebar-link">
+                       <i class="lni lni-ticket-alt"></i>
+                      <span>Coupons</span>
+                   </a>
+               </li>
+                <li class="sidebar-item">
+                     <a href="#" class="sidebar-link">
+                        <i class="fa-brands fa-slack"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="/admin/adminLogout" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div style="margin-top: 3%;" class="container">
+            <h1 style="margin-bottom: 3%;">Edit Category</h1>
+            <div class="row">
+                <form action="/admin/updateCategory/{{categoryId}}" method="post" class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12 m12 l6">
+                            <input value="{{categoryData.categoryName}}" name="categoryName" id="editProfile-form"
+                                type="text">
+                            <label for="first_name">Category name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12 m12 l6">
+                            <textarea name="categoryDescription" id="">{{categoryData.description}}</textarea>
+                            <label for="first_name">Description</label>
+                        </div>
+                    </div>
+                    <button id="btn-editProfile" style="background-color:#0e2238 ;" type="submit">update</button>
+                </form>
+            </div>
+
+</section> <!-- content-main end// -->
+
+<script src="/Javascript/sidebar.js"></script>

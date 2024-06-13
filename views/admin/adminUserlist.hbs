@@ -1,0 +1,245 @@
+<link rel="stylesheet" href="/css/adminListUser.css">
+
+<div class="admin-nav">
+  <nav class="navbar navbar-expand-lg navbar-light" id="admin-nav">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a id="navlink" class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a id="navlink" class="nav-link" href="#">Notifications<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a id="navlink" class="nav-link" href="#">Alert</a>
+      </ul>
+    </div>
+  </nav>
+</div>
+<section>
+  <div class="wrapper">
+    <aside id="sidebar">
+      <div class="d-flex">
+        <button id="toggle-btn" type="button">
+          <i class="lni lni-grid-alt"></i>
+        </button>
+
+      </div>
+      <ul class="sidebar-nav">
+        <li class="sidebar-item">
+          <a href="/admin/adminDashboard" class="sidebar-link">
+            <i class="fa-solid fa-house"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/admin/listUsers" class="sidebar-link">
+            <i class="lni lni-user"></i>
+            <span>Customers</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/admin/productManagement" class="sidebar-link">
+            <i class="fa-solid fa-box-open"></i>
+            <span>Products</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/admin/categoryManagement" class="sidebar-link">
+            <i class="lni lni-agenda"></i>
+            <span>Categories</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/admin/orderManagement" class="sidebar-link">
+            <i class="fa-solid fa-copy"></i>
+            <span>Orders</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/admin/offerManagement" class="sidebar-link">
+            <i class="lni lni-popup"></i>
+            <span>Offers</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/admin/couponManagement" class="sidebar-link">
+            <i class="lni lni-ticket-alt"></i>
+            <span>Coupons</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/admin/offerManagement" class="sidebar-link">
+            <i class="fa-brands fa-slack"></i>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="/admin/adminLogout" class="sidebar-link">
+          <i class="lni lni-exit"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="pag">
+      <div id="table-wrapper">
+        <table class="table-responsive" id="paginatedTable">
+          <thead class="tb">
+            <tr class="tr">
+              <th class="th">Name</th>
+              <th class="th">Email</th>
+              <th class="th">Phone</th>
+              <th class="th">status</th>
+              <th class="th">Actions</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {{#each userData}}
+            <tr>
+              <td class="td">{{this.name}}</td>
+              <td class="td">{{this.email}}</td>
+              <td class="td">{{this.phone}}</td>
+              <td class="td">
+                <h6 id="list-sts-users">Active</h6>
+              </td>
+              <td class="td">
+                {{#if this.block}}
+                <a id="button2" class="badge bg-danger" href="/admin/unBlockUser/{{this._id}}">Block</a>
+                {{else}}
+                <a id="button1" class="badge bg-success" href="/admin/blockUser/{{this._id}}">Unblock</a>
+                {{/if}}
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top: 5%; " class="pagination">
+        <button style="background-color:rgb(255, 255, 255)" class="backward" id="first"></button>
+        <button style="background-color:rgb(0, 0, 0)" class="backward" id="prev"></button>
+        <button style="background-color:rgb(0, 0, 0)" class="forward" id="next"></button>
+        <button style="background-color:rgb(255, 255, 255)" class="forward" id="last"></button>
+        <div class="page-numbers" id="pageNumbers"></div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<script>
+  let pageList = new Array()
+  let currentPage = 1
+  const numberPerPage = 12
+  const rows = Array.prototype.slice.call(document.querySelectorAll('tbody tr'))
+  const firstBtn = document.getElementById('first')
+  const lastBtn = document.getElementById('last')
+  const prevBtn = document.getElementById('prev')
+  const nextBtn = document.getElementById('next')
+  const numberOfPages = getNumberOfPages()
+  const pageNumbers = document.getElementById('pageNumbers')
+
+  firstBtn.addEventListener('click', firstPage, false)
+  lastBtn.addEventListener('click', lastPage, false)
+  prevBtn.addEventListener('click', prevPage, false)
+  nextBtn.addEventListener('click', nextPage, false)
+
+  window.onload = load(numberOfPages)
+
+  function getNumberOfPages() {
+    return Math.ceil(rows.length / numberPerPage)
+  }
+
+  function generatePageNumbers(pageCount) {
+    for (let j = 1; j <= pageCount; j++) {
+      const pageNumber = document.createElement('span')
+      pageNumber.innerHTML = j
+      pageNumber.classList.add('page-number')
+      pageNumbers.appendChild(pageNumber)
+      if (j === currentPage) {
+        pageNumber.classList.add('active')
+      }
+      pageNumber.addEventListener('click', jumpToPage, false)
+    }
+  }
+
+  function jumpToPage(event) {
+    currentPage = event.target.innerHTML
+    loadRows()
+    activePageNum(currentPage)
+  }
+
+  function activePageNum(activePage) {
+    const pageNumbers = Array.prototype.slice.call(document.querySelectorAll('.page-number'))
+    pageNumbers.forEach(function (pageNumber) {
+      if (parseInt(pageNumber.innerHTML) === activePage) {
+        pageNumber.classList.add('active')
+      } else {
+        pageNumber.classList.remove('active')
+      }
+    })
+  }
+
+  function nextPage() {
+    currentPage += 1
+    loadRows()
+    activePageNum(currentPage)
+  }
+
+  function prevPage() {
+    currentPage -= 1
+    loadRows()
+    activePageNum(currentPage)
+  }
+
+  function firstPage() {
+    currentPage = 1
+    loadRows()
+    activePageNum(currentPage)
+  }
+
+  function lastPage() {
+    currentPage = numberOfPages
+    loadRows()
+    activePageNum(currentPage)
+  }
+
+  function loadRows() {
+    const start = ((currentPage - 1) * numberPerPage)
+    const end = start + numberPerPage
+    for (let i = 0; i < pageList.length; i++) {
+      pageList[i].classList.add('hidden')
+    }
+    pageList = rows.slice(start, end)
+    drawRows()
+    buttonStates()
+  }
+
+  function drawRows() {
+    for (let i = 0; i < pageList.length; i++) {
+      pageList[i].classList.remove('hidden')
+    }
+  }
+
+  function buttonStates() {
+    document.getElementById('next').disabled = currentPage == numberOfPages ? true : false
+    document.getElementById('prev').disabled = currentPage == 1 ? true : false
+    document.getElementById('first').disabled = currentPage == 1 ? true : false
+    document.getElementById('last').disabled = currentPage == numberOfPages ? true : false
+  }
+
+  function load(pageCount) {
+    generatePageNumbers(numberOfPages)
+    loadRows()
+  }
+</script>
+<script src="/Javascript/sidebar.js"></script>
+<script src="/Javascript/pagination.js"></script>

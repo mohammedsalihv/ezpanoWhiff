@@ -1,0 +1,207 @@
+<div class="admin-nav">
+    <nav class="navbar navbar-expand-lg navbar-light" id="admin-nav">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a id="navlink" class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a id="navlink" class="nav-link" href="#">Notifications<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a id="navlink" class="nav-link" href="#">Alert</a>
+            </ul>
+        </div>
+    </nav>
+</div>
+<section>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <button id="toggle-btn" type="button">
+                    <i class="lni lni-grid-alt"></i>
+                </button>
+
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="/admin/adminDashboard" class="sidebar-link">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/listUsers" class="sidebar-link">
+                        <i class="lni lni-user"></i>
+                        <span>Customers</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/productManagement" class="sidebar-link">
+                        <i class="fa-solid fa-box-open"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/categoryManagement" class="sidebar-link">
+                        <i class="lni lni-agenda"></i>
+                        <span>Categories</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/orderManagement" class="sidebar-link">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/offerManagement" class="sidebar-link">
+                        <i class="lni lni-popup"></i>
+                        <span>Offers</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/couponManagement" class="sidebar-link">
+                        <i class="lni lni-ticket-alt"></i>
+                        <span>Coupons</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fa-brands fa-slack"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="/admin/adminLogout" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="content-main-catogery">
+            <div class="row" id="row-order">
+                <button onclick="addOffer()" id="btn-add-offer">Create offer</button>
+                <div id="tbl" class="table-responsive">
+                    <table class="table table">
+                        <thead id="tbl" class="tble-head-category">
+                            <tr id="head">
+                              
+                                <th style="color: white;">Product/category wise</th>
+                                <th style="color: white;">Offer type</th>
+                                <th style="color: white;">Start date</th>
+                                <th style="color: white;">End date</th>
+                                <th style="color: white;">Offer value</th>
+                                <th style="color: white;">Description</th>
+                                <th style="color: white;">Remove</th>
+                              
+                            </tr>
+                        </thead>
+                     <tbody id="body-table">
+                {{#each offers}}
+                <tr>
+                    <td style="text-align: center;">
+                        {{#if this.product}}
+                            {{this.product.productName}}
+                        {{else}}
+                            {{this.category.categoryName}}
+                        {{/if}}
+                    </td>
+                    <td style="text-align: center;">{{this.offerType}}</td>
+                    <td style="text-align: center;">{{this.startDate}}</td>
+                    <td style="text-align: center;">{{this.endDate}}</td>
+                    <td style="text-align: center;">{{this.offerValue}}</td>
+                    <td style="text-align: center;">{{this.description}}</td>
+                    <td style="text-align: center;">
+                        <button id="btn-coupons-delete" onclick="offerDelete('{{this._id}}')">Delete</button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="pagination-wrap">
+                <ul class="pagination">
+                    <li class="page-item {{#if (eq currentPage 1)}}disabled{{/if}}">
+                        <a href="/admin/couponManagement?page={{add currentPage -1}}&limit={{limit}}">&laquo;</a>
+                    </li>
+                    {{#range 1 totalPages}}
+                    <li class="page-item {{#if (eq ../currentPage this)}}active{{/if}}">
+                        <a href="/admin/couponManagement?page={{this}}&limit={{../limit}}">{{this}}</a>
+                    </li>
+                    {{/range}}
+                    <li class="page-item {{#if (eq currentPage totalPages)}}disabled{{/if}}">
+                        <a href="/admin/couponManagement?page={{add currentPage 1}}&limit={{limit}}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+</section>
+
+
+
+<script>
+    async function offerDelete(offerId) {
+        console.log('triggered');
+
+        const confirmation = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        });
+
+        if (!confirmation.isConfirmed) {
+            return;  // User cancelled the deletion
+        }
+
+        try {
+            const result = await fetch(`/admin/offerDelete/${offerId}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (!result.ok) {
+                const errorMessage = await result.text();
+                throw new Error(`Failed to delete coupon: ${errorMessage}`);
+            }
+
+            // Show success message
+            await Swal.fire({
+                icon: 'success',
+                title: 'Deleted',
+                text: 'Your address has been deleted successfully!',
+                confirmButton: true
+            });
+
+            // Reload the page after the success message
+            window.location.reload();
+
+        } catch (error) {
+            console.error('Error deleting coupon:', error);
+            // Handle the error, e.g., show an error message to the user
+            Swal.fire('Error', 'Failed to delete coupon. Please try again later.', 'error');
+        }
+    }
+</script>
+
+<script>
+
+    function addOffer() {
+        window.location.href = '/admin/addOffer';
+    }
+</script>
+
+<script src="/Javascript/sidebar.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

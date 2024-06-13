@@ -1,0 +1,214 @@
+<section>
+  <button onclick="window.history.back();" style="padding: 8px;" class="btn btn-info mt-4 ml-4">Go back</button>
+  <div style="margin-top: -5%;" class="content-main-category">
+    <div class="row" id="row-order">
+      <div id="tbl" class="table-responsive">
+        <table class="table table-hover">
+          <thead id="tbl" class="tble-head-category">
+            <tr id="head">
+              <th style="color: white;">Product Details</th>
+              <th style="color: white;">Ordered date</th>
+              <th style="color: white;">Billing Address</th>
+              <th style="color: white;">Order Status</th>
+            </tr>
+          </thead>
+          <tbody id="body-table">
+            <tr>
+              <td>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="color: rgb(0, 0, 0);">Product Image</th>
+                      <th style="color: rgb(0, 0, 0);">Product Name</th>
+                      <th style="color: rgb(0, 0, 0);">Product Quantity</th>
+                      <th style="color: rgb(0, 0, 0);">Product Price</th>
+                      <th style="color: rgb(0, 0, 0);">Product Status</th>
+                      <th style="color: rgb(0, 0, 0);">Change</th>
+                      {{#if this.reasonReturn}}
+                      <th style="color: rgb(0, 0, 0);">Return reason</th>
+                     {{/if}}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each orderDetails.products}}
+                    <tr>
+                      <td><img style="height:150px; width:150px;" src="/images/cropped_{{this.img1}}" alt="{{this.productName}}"></td>
+                      <td>{{this.productName}}</td>
+                      <td>{{this.quantity}}</td>
+                      <td>{{this.salesPrice}}</td>
+                      <td>{{this.status}}</td>
+                   
+                      {{#if (eq this.status 'canceled')}}
+                      <td>Already canceled</td>
+                      {{else}}
+                      <td>
+                        <form action="/admin/ordersProductUpdate" method="post">
+                          <input type="hidden" name="productId" value="{{this._id}}">
+                          <select name="newStatus" class="form-select" aria-label="Default select example">
+                            <option selected>Select</option>
+                            <option value="pending">Pending</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Returned">Returned</option>
+                          </select>
+                          <button style="padding-bottom: 28px; width:80%" id="btn-order" type="submit" class="btn btn-primary mt-3">Change</button>
+                        </form>
+                      </td>
+                      {{/if}}
+                        {{#if this.returnReason}} 
+                      <td>{{this.returnReason}}</td>
+                      {{/if}}
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </td>
+              <td>{{orderDetails.OrderedDate}}</td>
+              <td>
+                <br>{{orderDetails.address.fullname}},
+                <br>{{orderDetails.address.addressLine}},
+                <br>{{orderDetails.address.City}},
+                <br>{{orderDetails.address.state}},
+                <br>{{orderDetails.address.country}},
+                {{orderDetails.address.pincode}}
+              </td>
+              {{#if (eq orderDetails.orderStatus 'canceled')}}
+              <td>Order canceled</td>
+              {{else}}
+              <td>
+                <form action="/admin/ordersUpdate" method="post">
+                <input type="hidden" name="orderId" value="{{orderDetails.orderId}}">
+                  <select name="newStatus" class="form-select" aria-label="Default select example">
+                    <option selected>Select</option>
+                    <option value="pending">Pending</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Cancelled">Cancelled</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Returned">Returned</option>
+                  </select>
+                  <button style="padding-bottom: 28px; width:80%" id="btn-order" type="submit" class="btn btn-primary mt-3">Save</button>
+                </form>
+              </td>
+              {{/if}}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+  <div class="pagination">
+    <button style="background-color:rgb(255, 255, 255)" class="backward" id="first"></button>
+    <button style="background-color:rgb(0, 0, 0)" class="backward" id="prev"></button>
+    <button style="background-color:rgb(0, 0, 0)" class="forward" id="next"></button>
+    <button style="background-color:rgb(255, 255, 255)" class="forward" id="last"></button>
+    <div class="page-numbers" id="pageNumbers"></div>
+  </div>
+</section>
+
+<script>
+  let currentPage = 1;
+  const rows = Array.prototype.slice.call(document.querySelectorAll('tbody tr'));
+  const firstBtn = document.getElementById('first');
+  const lastBtn = document.getElementById('last');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const numberPerPage = 4; // Show 5 rows per page
+  const numberOfPages = getNumberOfPages();
+  const pageNumbers = document.getElementById('pageNumbers');
+
+  firstBtn.addEventListener('click', firstPage, false);
+  lastBtn.addEventListener('click', lastPage, false);
+  prevBtn.addEventListener('click', prevPage, false);
+  nextBtn.addEventListener('click', nextPage, false);
+
+  window.onload = load(numberOfPages);
+
+  function getNumberOfPages() {
+    return Math.ceil(rows.length / numberPerPage);
+  }
+
+  function generatePageNumbers(pageCount) {
+    for (let j = 1; j <= pageCount; j++) {
+      const pageNumber = document.createElement('span');
+      pageNumber.innerHTML = j;
+      pageNumber.classList.add('page-number');
+      pageNumbers.appendChild(pageNumber);
+      if (j === currentPage) {
+        pageNumber.classList.add('active');
+      }
+      pageNumber.addEventListener('click', jumpToPage, false);
+    }
+  }
+
+  function jumpToPage(event) {
+    currentPage = parseInt(event.target.innerHTML);
+    loadRows();
+    activePageNum(currentPage);
+  }
+
+  function activePageNum(activePage) {
+    const pageNumbers = Array.prototype.slice.call(document.querySelectorAll('.page-number'));
+    pageNumbers.forEach(function (pageNumber) {
+      if (parseInt(pageNumber.innerHTML) === activePage) {
+        pageNumber.classList.add('active');
+      } else {
+        pageNumber.classList.remove('active');
+      }
+    });
+  }
+
+  function nextPage() {
+    currentPage += 1;
+    loadRows();
+    activePageNum(currentPage);
+  }
+
+  function prevPage() {
+    currentPage -= 1;
+    loadRows();
+    activePageNum(currentPage);
+  }
+
+  function firstPage() {
+    currentPage = 1;
+    loadRows();
+    activePageNum(currentPage);
+  }
+
+  function lastPage() {
+    currentPage = numberOfPages;
+    loadRows();
+    activePageNum(currentPage);
+  }
+
+  function loadRows() {
+    const start = (currentPage - 1) * numberPerPage;
+    const end = start + numberPerPage;
+    for (let i = 0; i < rows.length; i++) {
+      if (i >= start && i < end) {
+        rows[i].style.display = 'table-row';
+      } else {
+        rows[i].style.display = 'none';
+      }
+    }
+    buttonStates();
+  }
+
+  function buttonStates() {
+    document.getElementById('next').disabled = currentPage === numberOfPages;
+    document.getElementById('prev').disabled = currentPage === 1;
+    document.getElementById('first').disabled = currentPage === 1;
+    document.getElementById('last').disabled = currentPage === numberOfPages;
+  }
+
+  function load(pageCount) {
+    generatePageNumbers(pageCount);
+    loadRows();
+  }
+
+</script>

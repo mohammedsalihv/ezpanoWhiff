@@ -1,0 +1,293 @@
+<link rel="stylesheet" href="/css/catogeriesPage.css">
+
+<div class="admin-nav">
+    <nav class="navbar navbar-expand-lg navbar-light" id="admin-nav">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a id="navlink" class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a id="navlink" class="nav-link" href="#">Notifications<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a id="navlink" class="nav-link" href="#">Alert</a>
+            </ul>
+        </div>
+    </nav>
+</div>
+<section>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <button id="toggle-btn" type="button">
+                    <i class="lni lni-grid-alt"></i>
+                </button>
+
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="/admin/adminDashboard" class="sidebar-link">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/listUsers" class="sidebar-link">
+                        <i class="lni lni-user"></i>
+                        <span>Customers</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/productManagement" class="sidebar-link">
+                        <i class="fa-solid fa-box-open"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/categoryManagement" class="sidebar-link">
+                        <i class="lni lni-agenda"></i>
+                        <span>Categories</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/orderManagement" class="sidebar-link">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                   <a href="/admin/offerManagement" class="sidebar-link">
+                        <i class="lni lni-popup"></i>
+                        <span>Offers</span>
+                    </a>
+                </li>
+              <li class="sidebar-item">
+           <a href="/admin/couponManagement" class="sidebar-link">
+            <i class="lni lni-ticket-alt"></i>
+            <span>Coupons</span>
+          </a>
+        </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fa-brands fa-slack"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="/admin/adminLogout" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div class="content-main-catogery">
+            <div id="card-catogery" class="card  ">
+                <div class="card-body">
+                    <div class="row" id="row-catogery">
+                        <div class="content-header">
+                            <div>
+                                <div class="alerts-category">
+                                    <p id="alerts-category" class="text-center">
+                                        {{this.categoryUnique}}
+                                        {{this.categoryMsg}}
+                                        {{this.updateMsg}}
+                                        {{this.noCategory}}
+                                        {{this.alreadyExist}}
+                                        {{this.succMsg}}
+                                    </p>
+                                </div>
+
+                                <h2 class="content-title card-title">Categories </h2>
+
+                                <p id="edit-title">ADD CATEGORY</p>
+                            </div>
+                            <div class="search">
+                                <input type="text" placeholder="Search Categories" class="form-control bg-white">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <form action="/admin/addingNewCategory" method="post">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Name</label>
+                                    <input name="categoryName" type="text" placeholder="Type here" class="form-control"
+                                        id="product_name" required />
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_slug" class="form-label">Description</label>
+                                    <textarea name="categoryDescription" id="" cols="30" rows="10" required></textarea>
+                                </div>
+                                <div class="d-grid">
+                                    <button id="create-catogery" class="btn btn-primary">Create category</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-9">
+                            <div id="tbl" class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="tble-head-category">
+                                        <tr id="head">
+
+                                            <th style="color: white;">Name</th>
+                                            <th style="color: white;">Description</th>
+                                            <th style="color: white;">Delete</th>
+                                            <th style="color: white;">Edit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="body-table">
+                                        {{#each categories}}
+                                        <tr id="head">
+
+                                            <td><b>{{this.categoryName}}</b></td>
+                                            <td>{{this.description}}</td>
+                                            <td>
+                                                <!-- Link with the dropdown toggle class -->
+                                                <a href="#" id="dropdownToggle" class="dropdown-toggle"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>
+
+                                                <!-- Dropdown menu -->
+                                                <ul id="hover-dlt" class="dropdown-menu"
+                                                    aria-labelledby="dropdownToggle">
+                                                    <li><a class="dropdown-item"
+                                                            href="/admin/deleteCategory/{{this._id}}">Delete</a></li>
+                                                    <li><a class="dropdown-item" href="#">Delete (soft)</a></li>
+                                                    <!-- Add more dropdown items as needed -->
+                                                </ul>
+
+                                            </td>
+                                            <td>
+                                                <a href="/admin/editCategory/{{this._id}}">
+                                                    <i id="editIcon" class="fa-solid fa-pen-to-square"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> <!-- .col// -->
+                    </div> <!-- .row // -->
+                </div> <!-- card body .// -->
+            </div>
+            <div style="margin-top: 5%; " class="pagination">
+                <button style="background-color:rgb(255, 255, 255)" class="backward" id="first"></button>
+                <button style="background-color:rgb(0, 0, 0)" class="backward" id="prev"></button>
+                <button style="background-color:rgb(0, 0, 0)" class="forward" id="next"></button>
+                <button style="background-color:rgb(255, 255, 255)" class="forward" id="last"></button>
+                <div class="page-numbers" id="pageNumbers"></div>
+            </div>
+
+        </div> <!-- card .// -->
+</section> <!-- content-main end// -->
+<script>
+    let currentPage = 1;
+    const rows = Array.prototype.slice.call(document.querySelectorAll('tbody tr'));
+    const firstBtn = document.getElementById('first');
+    const lastBtn = document.getElementById('last');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const numberPerPage = 4; // Show 5 rows per page
+    const numberOfPages = getNumberOfPages();
+    const pageNumbers = document.getElementById('pageNumbers');
+
+    firstBtn.addEventListener('click', firstPage, false);
+    lastBtn.addEventListener('click', lastPage, false);
+    prevBtn.addEventListener('click', prevPage, false);
+    nextBtn.addEventListener('click', nextPage, false);
+
+    window.onload = load(numberOfPages);
+
+    function getNumberOfPages() {
+        return Math.ceil(rows.length / numberPerPage);
+    }
+
+    function generatePageNumbers(pageCount) {
+        for (let j = 1; j <= pageCount; j++) {
+            const pageNumber = document.createElement('span');
+            pageNumber.innerHTML = j;
+            pageNumber.classList.add('page-number');
+            pageNumbers.appendChild(pageNumber);
+            if (j === currentPage) {
+                pageNumber.classList.add('active');
+            }
+            pageNumber.addEventListener('click', jumpToPage, false);
+        }
+    }
+
+    function jumpToPage(event) {
+        currentPage = parseInt(event.target.innerHTML);
+        loadRows();
+        activePageNum(currentPage);
+    }
+
+    function activePageNum(activePage) {
+        const pageNumbers = Array.prototype.slice.call(document.querySelectorAll('.page-number'));
+        pageNumbers.forEach(function (pageNumber) {
+            if (parseInt(pageNumber.innerHTML) === activePage) {
+                pageNumber.classList.add('active');
+            } else {
+                pageNumber.classList.remove('active');
+            }
+        });
+    }
+
+    function nextPage() {
+        currentPage += 1;
+        loadRows();
+        activePageNum(currentPage);
+    }
+
+    function prevPage() {
+        currentPage -= 1;
+        loadRows();
+        activePageNum(currentPage);
+    }
+
+    function firstPage() {
+        currentPage = 1;
+        loadRows();
+        activePageNum(currentPage);
+    }
+
+    function lastPage() {
+        currentPage = numberOfPages;
+        loadRows();
+        activePageNum(currentPage);
+    }
+
+    function loadRows() {
+        const start = (currentPage - 1) * numberPerPage;
+        const end = start + numberPerPage;
+        for (let i = 0; i < rows.length; i++) {
+            if (i >= start && i < end) {
+                rows[i].style.display = 'table-row';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+        buttonStates();
+    }
+
+    function buttonStates() {
+        document.getElementById('next').disabled = currentPage === numberOfPages;
+        document.getElementById('prev').disabled = currentPage === 1;
+        document.getElementById('first').disabled = currentPage === 1;
+        document.getElementById('last').disabled = currentPage === numberOfPages;
+    }
+
+    function load(pageCount) {
+        generatePageNumbers(pageCount);
+        loadRows();
+    }
+
+</script>
+<script src="/Javascript/sidebar.js"></script>
+<script src="/Javascript/msgs.js"></script>
